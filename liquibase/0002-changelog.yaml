@@ -1,8 +1,8 @@
 databaseChangeLog:
-  - changeset:
+  - changeSet:
       id: 1
       author: Thomas Sarpong
-      change:
+      changes:
         - createTable:
             tableName: users
             columns:
@@ -15,9 +15,10 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: uuid
-                  type: VARCHAR(255)
+                  type: UUID
                   constraints:
                     nullable: false
+                    defaultValueComputed: 'uuid_generate_v4()'
               - column:
                   name: first_name
                   type: VARCHAR(255)
@@ -43,20 +44,20 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     nullable: false
-                    defaultValueComputed: "now()"
+                    defaultValueComputed: 'now()'
 
         - createIndex:
             indexName: idx_uuid
             tableName: users
             unique: true
             columns:
-              column:
-                name: uuid
+              - column:
+                  name: uuid
 
         - createIndex:
             indexName: idx_email
             tableName: users
             unique: true
             columns:
-              column:
-                name: email
+              - column:
+                  name: email

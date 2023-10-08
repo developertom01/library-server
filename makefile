@@ -10,5 +10,6 @@ stop:
 
 gen:
 	go mod download gopkg.in/yaml.v3 &&  go get github.com/99designs/gqlgen@v0.17.35 && go run github.com/99designs/gqlgen
-make_migrate:
-	go get ariga.io/atlas-provider-gorm/gormschema@v0.1.0 && atlas migrate diff --env gorm
+	
+migrate:
+	liquibase  update
