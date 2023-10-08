@@ -1,0 +1,7 @@
+interface Error {
+  message: String!
+}
+
+type UnAuthorizedError implements Error{
+    message: String!
+}

@@ -7,7 +7,10 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/developertom01/library-server/app/graphql/resolvers"
 	"github.com/developertom01/library-server/app/middleware"
+	"github.com/developertom01/library-server/app/socket"
+	"github.com/developertom01/library-server/generated"
 	"github.com/developertom01/library-server/internals/db"
 	"github.com/developertom01/library-server/internals/object"
 

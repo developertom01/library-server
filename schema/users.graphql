@@ -1,0 +1,42 @@
+#import "./global.graphql"
+
+type User {
+  firstName: String
+  lastName: String
+  email: String!
+  createdAt: String
+  updatedAt: String
+}
+
+input SignUpInput {
+  firstName: String
+  lastName: String
+  email: String!
+  password: String!
+}
+
+input LoginInInput {
+  email: String!
+  password: String!
+}
+
+type LoginFailedErrorResponse implements Error {
+  message: String!
+}
+
+type LoginSuccessResponse {
+  accessToken: String!
+  refreshToken: String!
+}
+
+union LoginResponse = LoginSuccessResponse | LoginFailedErrorResponse
+
+union CurrentUserResponse = User | UnAuthorizedError
+
+extend type Mutation {
+  login(input: LoginInInput!): LoginResponse
+}
+
+extend type Query {
+  currentUser: CurrentUserResponse
+}
