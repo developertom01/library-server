@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - ${PORT}:8000
+    volumes:
+      - ./:/opt/app
+
+    environment:
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - PORT=${PORT}
+      - APP_SECRET=${APP_SECRET}
+      - SPACES_KEY= ${SPACES_KEY}
+      - SPACES_SECRET= ${SPACES_SECRET}
+      - SPACES_BUCKET_NAME= ${SPACES_BUCKET_NAME}
+      - SPACES_BUCKET_ENDPOINT= ${SPACES_BUCKET_ENDPOINT}
+
+    restart: always
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - 5432:5432

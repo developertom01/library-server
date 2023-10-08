@@ -1,0 +1,16 @@
+package config
+
+import "os"
+
+var PORT = os.Getenv("PORT")
+var APP_SECRET = os.Getenv("APP_SECRET")
+
+var DATABASE_HOST = os.Getenv("DATABASE_HOST")
+var DATABASE_USER = os.Getenv("DATABASE_USER")
+var DATABASE_PASSWORD = os.Getenv("DATABASE_PASSWORD")
+var DATABASE_PORT = os.Getenv("DATABASE_PORT")
+var DATABASE_NAME = os.Getenv("DATABASE_NAME")
+var SPACES_KEY = os.Getenv("SPACES_KEY")
+var SPACES_SECRET = os.Getenv("SPACES_SECRET")
+var SPACES_BUCKET_NAME = os.Getenv("SPACES_BUCKET_NAME")
+var SPACES_BUCKET_ENDPOINT = os.Getenv("SPACES_BUCKET_ENDPOINT")
