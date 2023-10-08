@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeset:
+      id: 1
+      author: Thomas Sarpong
+      change:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: uuid
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "now()"
+
+        - createIndex:
+            indexName: idx_uuid
+            tableName: users
+            unique: true
+            columns:
+              column:
+                name: uuid
+
+        - createIndex:
+            indexName: idx_email
+            tableName: users
+            unique: true
+            columns:
+              column:
+                name: email

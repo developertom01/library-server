@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/library-server/internals/db"
-	"github.com/library-server/utils"
+	"github.com/developertom01/library-server/internals/db"
+	"github.com/developertom01/library-server/utils"
 )
 
 var userCtxKey = &contextKey{"user"}
