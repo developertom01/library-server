@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/developertom01/library-server/config"
 	"github.com/dgryski/trifles/uuid"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/library-server/config"
 )
 
 type JWTClaim struct {

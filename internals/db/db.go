@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/library-server/config"
+	"github.com/developertom01/library-server/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

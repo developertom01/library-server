@@ -7,9 +7,9 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/library-server/app/middleware"
-	"github.com/library-server/internals/db"
-	"github.com/library-server/internals/object"
+	"github.com/developertom01/library-server/app/middleware"
+	"github.com/developertom01/library-server/internals/db"
+	"github.com/developertom01/library-server/internals/object"
 
 	"github.com/go-chi/chi/v5"
 )
