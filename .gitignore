@@ -2,3 +2,5 @@
 
 *.log
 temp
+**/model/models_gen.go
+generated

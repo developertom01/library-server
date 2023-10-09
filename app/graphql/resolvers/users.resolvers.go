@@ -8,18 +8,44 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/developertom01/library-server/app/graphql/exceptions"
 	"github.com/developertom01/library-server/app/graphql/model"
+	"github.com/developertom01/library-server/app/graphql/resources"
 	"github.com/developertom01/library-server/generated"
+	"github.com/developertom01/library-server/utils"
 )
 
 // Login is the resolver for the login field.
 func (r *mutationResolver) Login(ctx context.Context, input model.LoginInInput) (model.LoginResponse, error) {
-	panic(fmt.Errorf("not implemented: Login - login"))
+	user, err := r.Db.FindUserByEmail(input.Email)
+	if err != nil {
+		return nil, fmt.Errorf("User with email does not exist")
+	}
+	isPasswordConfirmed := utils.ComparePasswords(user.Password, input.Password)
+	if !isPasswordConfirmed {
+		return nil, fmt.Errorf("Invalid password")
+	}
+	jwtToken, err := utils.SignToken(utils.JWTClaim{ID: user.ID, Email: user.Email, FirstName: user.FirstName, LastName: user.LastName})
+	if err != nil {
+		return nil, err
+	}
+	return &model.LoginSuccessResponse{
+		AccessToken:  jwtToken.AccessToken,
+		RefreshToken: jwtToken.RefreshToken,
+	}, nil
 }
 
 // CurrentUser is the resolver for the currentUser field.
 func (r *queryResolver) CurrentUser(ctx context.Context) (model.CurrentUserResponse, error) {
-	panic(fmt.Errorf("not implemented: CurrentUser - currentUser"))
+	jwtClaim := ctx.Value("user").(*utils.JWTClaim)
+	if jwtClaim == nil {
+		return exceptions.NewUnAuthorizeError("dsd"), nil
+	}
+	user, err := r.Db.FindUserByUuid(jwtClaim.UUID)
+	if err != nil {
+		return nil, err
+	}
+	return resources.NewUserResource(*user), nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

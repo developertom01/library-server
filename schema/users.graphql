@@ -1,31 +1,45 @@
 #import "./global.graphql"
 
 type User {
+  "user first name"
   firstName: String
+  "user last name"
   lastName: String
+  "user email"
   email: String!
+  "Created timestamp"
   createdAt: String
+  "Last updated timestamp"
   updatedAt: String
 }
 
 input SignUpInput {
+  "user first name"
   firstName: String
+  "user last name"
   lastName: String
+  "user email"
   email: String!
+  "user password"
   password: String!
 }
 
 input LoginInInput {
+  "user email"
   email: String!
+  "user password"
   password: String!
 }
 
 type LoginFailedErrorResponse implements Error {
+  "Error message"
   message: String!
 }
 
 type LoginSuccessResponse {
+  "Short lived jwt access token"
   accessToken: String!
+  "long lived jwt refresh token"
   refreshToken: String!
 }
 
@@ -34,9 +48,11 @@ union LoginResponse = LoginSuccessResponse | LoginFailedErrorResponse
 union CurrentUserResponse = User | UnAuthorizedError
 
 extend type Mutation {
+  "Log user in with email and password"
   login(input: LoginInInput!): LoginResponse
 }
 
 extend type Query {
+  "Get current user info"
   currentUser: CurrentUserResponse
 }
