@@ -36,6 +36,11 @@ type LoginFailedErrorResponse implements Error {
   message: String!
 }
 
+type EmailAlreadyExistsError implements Error {
+  "Error message"
+  message: String!
+}
+
 type LoginSuccessResponse {
   "Short lived jwt access token"
   accessToken: String!
@@ -47,9 +52,13 @@ union LoginResponse = LoginSuccessResponse | LoginFailedErrorResponse
 
 union CurrentUserResponse = User | UnAuthorizedError
 
+union SignUpUserResponse = User | EmailAlreadyExistsError
+
 extend type Mutation {
   "Log user in with email and password"
   login(input: LoginInInput!): LoginResponse
+  "Create user manually"
+  signUp(input: SignUpInput): SignUpUserResponse
 }
 
 extend type Query {
