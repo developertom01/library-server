@@ -1,0 +1,194 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Thomas Sarpong
+      changes:
+        - createTable:
+            tableName: folders
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: uuid
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "uuid_generate_v4()"
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_root
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+                    defaultValue: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "now()"
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "now()"
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+
+        - createTable:
+            tableName: files
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: uuid
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "uuid_generate_v4()"
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: VARCHAR(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "now()"
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "now()"
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+
+        - createTable:
+            tableName: folder_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: parent_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: file_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: child_folder_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "now()"
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "now()"
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+
+        - createIndex:
+            indexName: idx_uuid
+            tableName: folders
+            unique: true
+            columns:
+              - column:
+                  name: uuid
+
+        - createIndex:
+            indexName: idx_uuid_is_root
+            tableName: folders
+            unique: true
+            columns:
+              - column:
+                  name: uuid
+              - column:
+                  name: is_root
+
+        - createIndex:
+            indexName: idx_uuid
+            tableName: files
+            unique: true
+            columns:
+              - column:
+                  name: uuid
+
+        - addForeignKeyConstraint:
+            baseColumnNames: parent_id
+            baseTableName: folder_items
+            referencedColumnNames: id
+            referencedTableName: folders
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: folders
+            referencedColumnNames: id
+            referencedTableName: users
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+
+        - addForeignKeyConstraint:
+            baseColumnNames: file_id
+            baseTableName: folder_items
+            referencedColumnNames: id
+            referencedTableName: files
+            onDelete: CASCADE
+            onUpdate: SET NULL
+
+        - addForeignKeyConstraint:
+            baseColumnNames: child_folder_id
+            baseTableName: folder_items
+            referencedColumnNames: id
+            referencedTableName: folders
+            onDelete: CASCADE
+            onUpdate: SET NULL

@@ -18,7 +18,7 @@ databaseChangeLog:
                   type: UUID
                   constraints:
                     nullable: false
-                    defaultValueComputed: 'uuid_generate_v4()'
+                    defaultValueComputed: "uuid_generate_v4()"
               - column:
                   name: first_name
                   type: VARCHAR(255)
@@ -44,7 +44,18 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     nullable: false
-                    defaultValueComputed: 'now()'
+                    defaultValueComputed: "now()"
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: "now()"
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
 
         - createIndex:
             indexName: idx_uuid

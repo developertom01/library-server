@@ -13,8 +13,6 @@ type User struct {
 	LastName  string    `gorm:"column:last_name"`
 	Email     string    `gorm:"not null; unique;"`
 	Password  string    `gorm:"not null;"`
-	CreatedAt string    `gorm:"column:created_at; not null;"`
-	UpdatedAt string    `gorm:"column:updated_at; autoCreateTime"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
