@@ -18,9 +18,11 @@ type Folder struct {
 
 type File struct {
 	gorm.Model
-	Uuid uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();unique;"`
-	Name string    `gorm:"not null;column:name"`
-	Url  string    `gorm:"not null;column:name"`
+	Uuid   uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();unique;"`
+	Name   string    `gorm:"not null;column:name"`
+	Url    string    `gorm:"not null;column:name"`
+	UserId int       `gorm:"column:user_id"`
+	User   User      `gorm:"references:UserId"`
 }
 
 type FolderItem struct {

@@ -50,7 +50,7 @@ type PaginatedFolderItems {
   "Pagination meta data"
   meta: PaginatedMeta
   "List of Filer items"
-  list: [FolderItem]
+  list("Current page" page: Int!, pageSize: Int): [FolderItem]
 }
 
 input CreateFolderInput {

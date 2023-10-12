@@ -75,6 +75,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
                   name: created_at
                   type: TIMESTAMP
                   constraints:
@@ -182,6 +187,14 @@ databaseChangeLog:
             baseTableName: folder_items
             referencedColumnNames: id
             referencedTableName: files
+            onDelete: CASCADE
+            onUpdate: SET NULL
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: files
+            referencedColumnNames: id
+            referencedTableName: users
             onDelete: CASCADE
             onUpdate: SET NULL
 
