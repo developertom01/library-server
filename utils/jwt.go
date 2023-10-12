@@ -28,29 +28,29 @@ func SignToken(claim JWTClaim) (*Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	access_token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userString,
 		"exp": time.Now().Add(time.Minute * 30),
 		"iat": time.Now(),
 		"jti": uuid.UUIDv4(),
 	})
-	access_token_string, err := access_token.SignedString(config.APP_SECRET)
+	accessTokenString, err := accessToken.SignedString(config.APP_SECRET)
 	if err != nil {
 		return nil, err
 	}
-	refresh_token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userString,
 		"exp": time.Now().Add(time.Hour * 24),
 		"iat": time.Now(),
 		"jti": uuid.UUIDv4(),
 	})
-	refresh_token_string, err := refresh_token.SignedString(config.APP_SECRET)
+	refreshToken_string, err := refreshToken.SignedString(config.APP_SECRET)
 	if err != nil {
 		return nil, err
 	}
 	return &Token{
-		AccessToken:  access_token_string,
-		RefreshToken: refresh_token_string,
+		AccessToken:  accessTokenString,
+		RefreshToken: refreshToken_string,
 	}, nil
 }
 
