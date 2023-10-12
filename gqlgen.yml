@@ -83,11 +83,15 @@ models:
   Upload:
     model:
       - github.com/99designs/gqlgen/graphql.Upload
+
   Int:
     model:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
-  URL:
+  Url:
     model:
-      - github.com/developertom01/mothercare-backend/app/graphql/scalers.Url
+      - github.com/developertom01/library-server/app/graphql/scalers.Url
+  UUID:
+    model:
+      - github.com/developertom01/library-server/app/graphql/scalers.UUID

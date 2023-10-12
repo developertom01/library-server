@@ -1,0 +1,81 @@
+#import "./global.graphql"
+
+"All folders in the system"
+type Folder {
+  "UUID that uniquely identifies a folder"
+  uuid: UUID!
+  "Folder name"
+  name: String!
+  "Flag to indicate weather it is user root folder"
+  isRoot: Boolean!
+  "Owner of a folder"
+  user: User
+  "Children of a folder"
+  children: [FolderItem]
+  "Date-time of creation"
+  createdAt: String
+  "Date-time for last updated"
+  updatedAt: String
+}
+
+type File {
+  "UUID that uniquely identifies a file"
+  uuid: UUID!
+  "File name"
+  name: String
+  "Url for file location"
+  url: String!
+  "Date-time of creation"
+  createdAt: String
+  "Date-time for last updated"
+  updatedAt: String
+}
+
+enum ItemType {
+  FOLDER
+  FILE
+}
+type FolderItem {
+  "Folder type, either File or Folder"
+  type: ItemType!
+  "Folder child"
+  folder: Folder
+  "File child"
+  file: File
+  "Parent folder"
+  parent: Folder
+}
+
+type PaginatedFolderItems {
+  "Pagination meta data"
+  meta: PaginatedMeta
+  "List of Filer items"
+  list: [FolderItem]
+}
+
+input CreateFolderInput {
+  "Name of folder"
+  name: String!
+  "Parent UUID"
+  parentUuid: UUID
+}
+
+input CreateFileInput {
+  "Name of file"
+  name: String!
+  "Parent id"
+  parentUuid: UUID
+  "File url"
+  url: Url!
+}
+
+extend type Query {
+  folders: PaginatedFolderItems
+}
+
+extend type Mutation {
+  "Create folder"
+  createFolder(input: CreateFolderInput): Folder
+  "Create file"
+  createFile(input: CreateFileInput): File
+}

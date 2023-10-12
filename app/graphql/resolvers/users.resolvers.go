@@ -11,7 +11,6 @@ import (
 	"github.com/developertom01/library-server/app/graphql/exceptions"
 	"github.com/developertom01/library-server/app/graphql/model"
 	"github.com/developertom01/library-server/app/graphql/resources"
-	"github.com/developertom01/library-server/generated"
 	"github.com/developertom01/library-server/utils"
 )
 
@@ -56,12 +55,3 @@ func (r *queryResolver) CurrentUser(ctx context.Context) (model.CurrentUserRespo
 	}
 	return resources.NewUserResource(*user), nil
 }
-
-// Mutation returns generated.MutationResolver implementation.
-func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
-
-// Query returns generated.QueryResolver implementation.
-func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
-
-type mutationResolver struct{ *Resolver }
-type queryResolver struct{ *Resolver }

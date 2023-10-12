@@ -1,0 +1,11 @@
+enum FileUploadType {
+  PDF_FILE
+}
+
+input UploadFileInput {
+  file: Upload!
+  type: FileUploadType!
+}
+extend type Mutation {
+  uploadFile(input: UploadFileInput): String!
+}
