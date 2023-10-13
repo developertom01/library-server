@@ -18,6 +18,13 @@ func (db *Database) FindUserByUuid(uuid string) (*entities.User, error) {
 	return &user, res.Error
 }
 
+func (db *Database) FindUserById(id int) (*entities.User, error) {
+	var user entities.User
+	res := db.DB.Where("id=?", id).First(&user)
+
+	return &user, res.Error
+}
+
 func (db *Database) CreateUser(firstName string, lastName string, email string, password string) (*entities.User, error) {
 	user := entities.User{FirstName: firstName, LastName: lastName, Email: email, Password: password}
 	res := db.DB.Create(&user)

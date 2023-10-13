@@ -7,6 +7,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/developertom01/library-server/app/graphql/dataloader"
 	"github.com/developertom01/library-server/app/graphql/resolvers"
 	"github.com/developertom01/library-server/app/middleware"
 	"github.com/developertom01/library-server/app/socket"
@@ -32,8 +33,10 @@ func main() {
 		panic("Failed to initialize object storage")
 	}
 	defer socket.Close()
+	dataLoader := dataloader.NewDataLoader(database)
 	resolver := resolvers.NewResolver(database, socket, objectStorage)
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
+	r.Use(middleware.DataLoaderMiddleware(dataLoader))
 	r.Use(middleware.AuthenticationMiddleware(database))
 	r.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	r.Handle("/query", srv)

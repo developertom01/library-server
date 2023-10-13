@@ -10,8 +10,15 @@ type Folder {
   isRoot: Boolean!
   "Owner of a folder"
   user: User
+  "user id used to resolve user"
+  userId: ID
   "Children of a folder"
-  children: [FolderItem]
+  children(
+    "Current page"
+    page: Int
+    "Number of entities requesting"
+    pageSize: Int
+  ): PaginatedFolderItems
   "Date-time of creation"
   createdAt: String
   "Date-time for last updated"
@@ -50,7 +57,7 @@ type PaginatedFolderItems {
   "Pagination meta data"
   meta: PaginatedMeta
   "List of Filer items"
-  list("Current page" page: Int!, pageSize: Int): [FolderItem]
+  list: [FolderItem]
 }
 
 input CreateFolderInput {
@@ -70,7 +77,13 @@ input CreateFileInput {
 }
 
 extend type Query {
-  folders: PaginatedFolderItems
+  "Folder items"
+  folders(
+    "Current page"
+    page: Int
+    "Number of entities requesting"
+    pageSize: Int
+  ): PaginatedFolderItems
 }
 
 extend type Mutation {

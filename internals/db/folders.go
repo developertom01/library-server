@@ -9,7 +9,7 @@ import (
 func mapFolderItemsToChildFolders(items []entities.FolderItem) []entities.Folder {
 	var children []entities.Folder
 	for _, item := range items {
-		children = append(children, item.ChildFolder)
+		children = append(children, *item.ChildFolder)
 	}
 
 	return children

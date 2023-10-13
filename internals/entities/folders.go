@@ -27,11 +27,11 @@ type File struct {
 
 type FolderItem struct {
 	gorm.Model
-	ParentId      int `gorm:"column:parent_id;"`
+	ParentId      int  `gorm:"column:parent_id;"`
 	FileId        int `gorm:"column:file_id;"`
 	ChildFolderId int `gorm:"column:child_folder_id;"`
 
-	Parent      Folder `gorm:"references:ParentId"`
-	ChildFolder Folder `gorm:"references:ChildFolderId"`
-	File        File   `gorm:"references:fileId"`
+	Parent      *Folder `gorm:"references:ParentId"`
+	ChildFolder *Folder `gorm:"references:ChildFolderId"`
+	File        *File   `gorm:"references:fileId"`
 }

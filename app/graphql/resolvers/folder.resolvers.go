@@ -12,6 +12,31 @@ import (
 	"github.com/developertom01/library-server/generated"
 )
 
+// User is the resolver for the user field.
+func (r *folderResolver) User(ctx context.Context, obj *model.Folder) (*model.User, error) {
+	panic(fmt.Errorf("not implemented: Children - children"))
+}
+
+// Children is the resolver for the children field.
+func (r *folderResolver) Children(ctx context.Context, obj *model.Folder, page *int, pageSize *int) (*model.PaginatedFolderItems, error) {
+	panic(fmt.Errorf("not implemented: Children - children"))
+}
+
+// Folder is the resolver for the folder field.
+func (r *folderItemResolver) Folder(ctx context.Context, obj *model.FolderItem) (*model.Folder, error) {
+	panic(fmt.Errorf("not implemented: Folder - folder"))
+}
+
+// File is the resolver for the file field.
+func (r *folderItemResolver) File(ctx context.Context, obj *model.FolderItem) (*model.File, error) {
+	panic(fmt.Errorf("not implemented: File - file"))
+}
+
+// Parent is the resolver for the parent field.
+func (r *folderItemResolver) Parent(ctx context.Context, obj *model.FolderItem) (*model.Folder, error) {
+	panic(fmt.Errorf("not implemented: Parent - parent"))
+}
+
 // CreateFolder is the resolver for the createFolder field.
 func (r *mutationResolver) CreateFolder(ctx context.Context, input *model.CreateFolderInput) (*model.Folder, error) {
 	panic(fmt.Errorf("not implemented: CreateFolder - createFolder"))
@@ -23,9 +48,15 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input *model.CreateFi
 }
 
 // Folders is the resolver for the folders field.
-func (r *queryResolver) Folders(ctx context.Context) (*model.PaginatedFolderItems, error) {
+func (r *queryResolver) Folders(ctx context.Context, page *int, pageSize *int) (*model.PaginatedFolderItems, error) {
 	panic(fmt.Errorf("not implemented: Folders - folders"))
 }
+
+// Folder returns generated.FolderResolver implementation.
+func (r *Resolver) Folder() generated.FolderResolver { return &folderResolver{r} }
+
+// FolderItem returns generated.FolderItemResolver implementation.
+func (r *Resolver) FolderItem() generated.FolderItemResolver { return &folderItemResolver{r} }
 
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
@@ -33,5 +64,7 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type folderResolver struct{ *Resolver }
+type folderItemResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
