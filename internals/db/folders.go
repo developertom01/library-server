@@ -128,14 +128,18 @@ func (db *Database) CreateFolder(folderName string, ownerId int, parentUuid scal
 	if err != nil {
 		return entities.Folder{}, err
 	}
+
 	parentFolder := entities.Folder{
 		Uuid: uuidParsed,
 	}
 	db.DB.First(&parentFolder)
+	path := append(parentFolder.Path, parentFolder.Uuid)
 	folder := entities.Folder{
 		UserId: ownerId,
 		Name:   folderName,
+		Path:   path,
 	}
+
 	err = db.DB.Transaction(func(tx *gorm.DB) error {
 		if res := tx.Create(&folder); res.Error != nil {
 			return res.Error
@@ -190,16 +194,19 @@ func (db *Database) CreateFile(fileName string, url string, ownerId int, parentU
 	if err != nil {
 		return entities.File{}, err
 	}
+
 	parentFolder := entities.Folder{
 		Uuid: uuidParsed,
 	}
 	db.DB.First(&parentFolder)
-
+	path := append(parentFolder.Path, parentFolder.Uuid)
 	file := entities.File{
 		UserId: ownerId,
 		Name:   fileName,
 		Url:    url,
+		Path:   path,
 	}
+	
 	err = db.DB.Transaction(func(tx *gorm.DB) error {
 		if res := tx.Create(&file); res.Error != nil {
 			return res.Error

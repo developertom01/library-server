@@ -24,6 +24,8 @@ type Folder {
     "order by direction"
     orderBy: Order
   ): PaginatedFolderItems
+  "Path from root folder"
+  path: [UUID]!
   "Date-time of creation"
   createdAt: String
   "Date-time for last updated"
@@ -38,6 +40,8 @@ type File {
   name: String
   "Url for file location"
   url: String!
+  "Path from root folder"
+  path: [UUID]!
   "Date-time of creation"
   createdAt: String
   "Date-time for last updated"
