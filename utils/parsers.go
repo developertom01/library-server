@@ -39,3 +39,30 @@ func ParseUintToString(t uint) *string {
 func ParseScalerUuidToNativeUuid(id scalers.UUID) (uuid.UUID, error) {
 	return uuid.Parse(string(id))
 }
+
+func ParseNativeUuidToScalerUuid(id uuid.UUID) scalers.UUID {
+	return scalers.UUID(id.String())
+}
+
+func ParseArrayOfScalerUuidToNativeUuid(ids []scalers.UUID) ([]*uuid.UUID, error) {
+	var uuids []*uuid.UUID
+	for _, id := range ids {
+		nativeUuid, err := ParseScalerUuidToNativeUuid(id)
+		if err != nil {
+			return []*uuid.UUID{}, nil
+		}
+
+		uuids = append(uuids, &nativeUuid)
+	}
+	return uuids, nil
+}
+
+func ParseArrayOfNativeUuidToScalerUuids(ids []uuid.UUID) []*scalers.UUID {
+	var uuids []*scalers.UUID
+	for _, id := range ids {
+		nativeUuid := ParseNativeUuidToScalerUuid(id)
+		uuids = append(uuids, &nativeUuid)
+	}
+
+	return uuids
+}
