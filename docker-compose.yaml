@@ -1,7 +1,6 @@
 version: "3.9"
 
 services:
-
   app:
     build:
       context: .
@@ -10,7 +9,6 @@ services:
       - ${PORT}:8000
     volumes:
       - ./:/opt/app
-
     environment:
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_HOST=${DATABASE_HOST}
@@ -23,7 +21,6 @@ services:
       - SPACES_SECRET= ${SPACES_SECRET}
       - SPACES_BUCKET_NAME= ${SPACES_BUCKET_NAME}
       - SPACES_BUCKET_ENDPOINT= ${SPACES_BUCKET_ENDPOINT}
-
     restart: always
     depends_on:
       - db
