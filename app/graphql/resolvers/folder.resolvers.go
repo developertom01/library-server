@@ -6,7 +6,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/developertom01/library-server/app/graphql/dataloader"
 	"github.com/developertom01/library-server/app/graphql/exceptions"
@@ -23,6 +22,7 @@ func (r *folderResolver) User(ctx context.Context, obj *model.Folder) (*model.Us
 	if err != nil {
 		return nil, err
 	}
+
 	return resources.NewUserResource(*user), nil
 }
 
@@ -32,6 +32,7 @@ func (r *folderResolver) Children(ctx context.Context, obj *model.Folder, page *
 	if err != nil {
 		return nil, err
 	}
+
 	limit, offset := utils.CalculatePaginationLimitAndOffset(*page, *pageSize)
 	children, count, err := r.Db.FindPaginatedFolderContentReferencingParentId(uuid, uint(limit), uint(offset), orderByField, orderBy)
 	if err != nil {
@@ -47,6 +48,7 @@ func (r *folderItemResolver) Folder(ctx context.Context, obj *model.FolderItem) 
 	if err != nil {
 		return nil, err
 	}
+
 	return resources.NewFolderResource(folder), nil
 }
 
@@ -56,6 +58,7 @@ func (r *folderItemResolver) File(ctx context.Context, obj *model.FolderItem) (*
 	if err != nil {
 		return nil, err
 	}
+
 	return resources.NewFileResource(file), nil
 }
 
@@ -65,17 +68,38 @@ func (r *folderItemResolver) Parent(ctx context.Context, obj *model.FolderItem) 
 	if err != nil {
 		return nil, err
 	}
+
 	return resources.NewFolderResource(parent), nil
 }
 
 // CreateFolder is the resolver for the createFolder field.
-func (r *mutationResolver) CreateFolder(ctx context.Context, input *model.CreateFolderInput) (*model.Folder, error) {
-	panic(fmt.Errorf("not implemented: CreateFolder - createFolder"))
+func (r *mutationResolver) CreateFolder(ctx context.Context, input *model.CreateFolderInput) (model.CreateFolderResponse, error) {
+	user := ctx.Value("user").(*utils.JWTClaim)
+	if user == nil {
+		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
+	}
+
+	folder, err := r.Db.CreateFolder(input.Name, int(user.ID), *input.ParentUUID)
+	if err != nil {
+		return nil, err
+	}
+
+	return resources.NewFolderResource(folder), nil
 }
 
 // CreateFile is the resolver for the createFile field.
-func (r *mutationResolver) CreateFile(ctx context.Context, input *model.CreateFileInput) (*model.File, error) {
-	panic(fmt.Errorf("not implemented: CreateFile - createFile"))
+func (r *mutationResolver) CreateFile(ctx context.Context, input *model.CreateFileInput) (model.CreateFileResponse, error) {
+	user := ctx.Value("user").(*utils.JWTClaim)
+	if user == nil {
+		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
+	}
+
+	file, err := r.Db.CreateFile(input.Name, string(input.URL), int(user.ID), *input.ParentUUID)
+	if err != nil {
+		return nil, err
+	}
+
+	return resources.NewFileResource(file), nil
 }
 
 // UserTopLevelFolders is the resolver for the userTopLevelFolders field.

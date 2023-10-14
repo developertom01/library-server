@@ -84,6 +84,8 @@ input CreateFileInput {
 }
 
 union UserTopLevelFolders = PaginatedFolderItems | UnAuthorizedError
+union CreateFolderResponse = Folder | UnAuthorizedError
+union CreateFileResponse = File | UnAuthorizedError
 
 extend type Query {
   "Folder items"
@@ -101,7 +103,7 @@ extend type Query {
 
 extend type Mutation {
   "Create folder"
-  createFolder(input: CreateFolderInput): Folder
+  createFolder(input: CreateFolderInput): CreateFolderResponse
   "Create file"
-  createFile(input: CreateFileInput): File
+  createFile(input: CreateFileInput): CreateFileResponse
 }
