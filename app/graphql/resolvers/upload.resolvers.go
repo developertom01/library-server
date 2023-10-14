@@ -6,12 +6,11 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/developertom01/library-server/app/graphql/model"
 )
 
 // UploadFile is the resolver for the uploadFile field.
 func (r *mutationResolver) UploadFile(ctx context.Context, input *model.UploadFileInput) (string, error) {
-	panic(fmt.Errorf("not implemented: UploadFile - uploadFile"))
+	return r.Os.PutFile(input.File.File, string(input.Type), input.File.Filename)
 }
