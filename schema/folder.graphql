@@ -19,6 +19,10 @@ type Folder {
     page: Int
     "Number of entities requesting"
     pageSize: Int
+    "Order by field"
+    orderByField: String
+    "order by direction"
+    orderBy: Order
   ): PaginatedFolderItems
   "Date-time of creation"
   createdAt: String
@@ -79,14 +83,20 @@ input CreateFileInput {
   url: Url!
 }
 
+union UserTopLevelFolders = PaginatedFolderItems | UnAuthorizedError
+
 extend type Query {
   "Folder items"
-  folders(
+  userTopLevelFolders(
     "Current page"
     page: Int
     "Number of entities requesting"
     pageSize: Int
-  ): PaginatedFolderItems
+    "Order by field"
+    orderByField: String
+    "order by direction"
+    orderBy: Order
+  ): UserTopLevelFolders
 }
 
 extend type Mutation {

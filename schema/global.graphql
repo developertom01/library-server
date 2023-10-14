@@ -2,6 +2,11 @@ interface Error {
   message: String!
 }
 
+enum Order {
+  ASC
+  DESC
+}
+
 type UnAuthorizedError implements Error {
   message: String!
 }
@@ -13,6 +18,10 @@ type PaginatedMeta {
   pageSize: Int!
   "Total Count of items"
   count: Int!
+  "Ordered direction"
+  orderBy: Order
+  "order by field"
+  orderByField: String
 }
 
 scalar Upload

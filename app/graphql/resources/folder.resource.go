@@ -70,12 +70,14 @@ func NewFolderItemCollectionResource(contents []entities.FolderItem) []*model.Fo
 	return folderContentResource
 }
 
-func PaginatedFolderItemResource(list []entities.FolderItem, count int, pageSize int, next int) *model.PaginatedFolderItems {
+func PaginatedFolderItemResource(list []entities.FolderItem, count int, pageSize int, next int, orderByField string, orderBy model.Order) *model.PaginatedFolderItems {
 	return &model.PaginatedFolderItems{
 		Meta: &model.PaginatedMeta{
-			NextPage: &next,
-			PageSize: pageSize,
-			Count:    count,
+			NextPage:     &next,
+			PageSize:     pageSize,
+			Count:        count,
+			OrderBy:      &orderBy,
+			OrderByField: &orderByField,
 		},
 		List: NewFolderItemCollectionResource(list),
 	}

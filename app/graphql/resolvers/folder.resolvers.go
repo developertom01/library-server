@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/developertom01/library-server/app/graphql/dataloader"
+	"github.com/developertom01/library-server/app/graphql/exceptions"
 	"github.com/developertom01/library-server/app/graphql/model"
 	"github.com/developertom01/library-server/app/graphql/resources"
 	"github.com/developertom01/library-server/generated"
@@ -26,18 +27,18 @@ func (r *folderResolver) User(ctx context.Context, obj *model.Folder) (*model.Us
 }
 
 // Children is the resolver for the children field.
-func (r *folderResolver) Children(ctx context.Context, obj *model.Folder, page *int, pageSize *int) (*model.PaginatedFolderItems, error) {
+func (r *folderResolver) Children(ctx context.Context, obj *model.Folder, page *int, pageSize *int, orderByField *string, orderBy *model.Order) (*model.PaginatedFolderItems, error) {
 	uuid, err := utils.ParseScalerUuidToNativeUuid(obj.UUID)
 	if err != nil {
 		return nil, err
 	}
 	limit, offset := utils.CalculatePaginationLimitAndOffset(*page, *pageSize)
-	children, err := r.Db.FindPaginatedFolderContentReferencingParentId(uuid, uint(limit), uint(offset))
+	children, count, err := r.Db.FindPaginatedFolderContentReferencingParentId(uuid, uint(limit), uint(offset), orderByField, orderBy)
 	if err != nil {
 		return nil, err
 	}
 
-	return resources.PaginatedFolderItemResource(children, 20, *pageSize, *page+1), nil
+	return resources.PaginatedFolderItemResource(children, count, *pageSize, *page+1, *orderByField, *orderBy), nil
 }
 
 // Folder is the resolver for the folder field.
@@ -77,9 +78,18 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input *model.CreateFi
 	panic(fmt.Errorf("not implemented: CreateFile - createFile"))
 }
 
-// Folders is the resolver for the folders field.
-func (r *queryResolver) Folders(ctx context.Context, page *int, pageSize *int) (*model.PaginatedFolderItems, error) {
-	panic(fmt.Errorf("not implemented: Folders - folders"))
+// UserTopLevelFolders is the resolver for the userTopLevelFolders field.
+func (r *queryResolver) UserTopLevelFolders(ctx context.Context, page *int, pageSize *int, orderByField *string, orderBy *model.Order) (model.UserTopLevelFolders, error) {
+	user := ctx.Value("user").(*utils.JWTClaim)
+	if user == nil {
+		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
+	}
+	limit, offset := utils.CalculatePaginationLimitAndOffset(*page, *pageSize)
+	contents, count, err := r.Db.FindUsersTopLevelFolderItems(int(user.ID), limit, offset, orderByField, orderBy)
+	if err != nil {
+		return nil, err
+	}
+	return resources.PaginatedFolderItemResource(contents, count, *pageSize, *page+1, *orderByField, *orderBy), nil
 }
 
 // Folder returns generated.FolderResolver implementation.
@@ -98,3 +108,13 @@ type folderResolver struct{ *Resolver }
 type folderItemResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//     it when you're done.
+//   - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *queryResolver) Folders(ctx context.Context, page *int, pageSize *int) (*model.PaginatedFolderItems, error) {
+	panic(fmt.Errorf("not implemented: Folders - folders"))
+}
