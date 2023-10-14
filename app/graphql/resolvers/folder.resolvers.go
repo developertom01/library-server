@@ -36,22 +36,35 @@ func (r *folderResolver) Children(ctx context.Context, obj *model.Folder, page *
 	if err != nil {
 		return nil, err
 	}
+
 	return resources.PaginatedFolderItemResource(children, 20, *pageSize, *page+1), nil
 }
 
 // Folder is the resolver for the folder field.
 func (r *folderItemResolver) Folder(ctx context.Context, obj *model.FolderItem) (*model.Folder, error) {
-	panic(fmt.Errorf("not implemented: Folder - folder"))
+	folder, err := r.Db.FindFolderReferencingFolderItemId(uint(obj.ID))
+	if err != nil {
+		return nil, err
+	}
+	return resources.NewFolderResource(folder), nil
 }
 
 // File is the resolver for the file field.
 func (r *folderItemResolver) File(ctx context.Context, obj *model.FolderItem) (*model.File, error) {
-	panic(fmt.Errorf("not implemented: File - file"))
+	file, err := r.Db.FindFileReferencingFolderItemId(uint(obj.ID))
+	if err != nil {
+		return nil, err
+	}
+	return resources.NewFileResource(file), nil
 }
 
 // Parent is the resolver for the parent field.
 func (r *folderItemResolver) Parent(ctx context.Context, obj *model.FolderItem) (*model.Folder, error) {
-	panic(fmt.Errorf("not implemented: Parent - parent"))
+	parent, err := r.Db.FindParentFolderReferencingFolderItemId(uint(obj.ID))
+	if err != nil {
+		return nil, err
+	}
+	return resources.NewFolderResource(parent), nil
 }
 
 // CreateFolder is the resolver for the createFolder field.

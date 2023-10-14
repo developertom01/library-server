@@ -76,6 +76,39 @@ func (db *Database) CreateFolder(folderName string, ownerId int, parentId int) (
 	return folder, err
 }
 
+func (db *Database) FindParentFolderReferencingFolderItemId(folderItemId uint) (entities.Folder, error) {
+	item := entities.FolderItem{
+		Model: gorm.Model{
+			ID: folderItemId,
+		},
+	}
+	res := db.DB.Model(&entities.FolderItem{}).Joins("Parent").First(&item)
+
+	return *item.Parent, res.Error
+}
+
+func (db *Database) FindFolderReferencingFolderItemId(folderItemId uint) (entities.Folder, error) {
+	item := entities.FolderItem{
+		Model: gorm.Model{
+			ID: folderItemId,
+		},
+	}
+	res := db.DB.Model(&entities.FolderItem{}).Joins("ChildFolder").First(&item)
+
+	return *item.ChildFolder, res.Error
+}
+
+func (db *Database) FindFileReferencingFolderItemId(fileId uint) (entities.File, error) {
+	item := entities.FolderItem{
+		Model: gorm.Model{
+			ID: fileId,
+		},
+	}
+	res := db.DB.Model(&entities.FolderItem{}).Joins("File").First(&item)
+
+	return *item.File, res.Error
+}
+
 func (db *Database) CreateFile(fileName string, url string, ownerId int, parentId int) (entities.File, error) {
 	var parentItem entities.FolderItem
 	file := entities.File{
