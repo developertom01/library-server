@@ -25,13 +25,24 @@ func (db *Database) FindUsersTopLevelFolderItems(userId int) ([]entities.FolderI
 	return rootFolder.Children, res.Error
 }
 
-func (db *Database) FindChildrenReferencingParentId(parentUuid uuid.UUID) ([]entities.Folder, error) {
+func (db *Database) FindChildrenReferencingParentId(parentUuid uuid.UUID) ([]entities.FolderItem, error) {
 	rootFolder := entities.Folder{
 		Uuid: parentUuid,
 	}
-	res := db.DB.Model(&entities.Folder{}).Joins("Children").Joins("Children.ChildFolder").Find(rootFolder)
+	subQuery := db.DB.Model(&entities.FolderItem{})
+	res := db.DB.Model(&entities.Folder{}).Joins("Children", subQuery).First(rootFolder)
 
-	return mapFolderItemsToChildFolders(rootFolder.Children), res.Error
+	return rootFolder.Children, res.Error
+}
+
+func (db *Database) FindPaginatedFolderContentReferencingParentId(parentUuid uuid.UUID, limit uint, offset uint) ([]entities.FolderItem, error) {
+	rootFolder := entities.Folder{
+		Uuid: parentUuid,
+	}
+	subQuery := db.DB.Model(&entities.FolderItem{}).Limit(int(limit)).Offset(int(offset))
+	res := db.DB.Model(&entities.Folder{}).Joins("Children", subQuery).First(rootFolder)
+
+	return rootFolder.Children, res.Error
 }
 
 func (db *Database) GetUserRootFolder(userId int) (entities.Folder, error) {

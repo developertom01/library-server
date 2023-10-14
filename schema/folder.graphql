@@ -2,6 +2,7 @@
 
 "All folders in the system"
 type Folder {
+  id: Int!
   "UUID that uniquely identifies a folder"
   uuid: UUID!
   "Folder name"
@@ -11,7 +12,7 @@ type Folder {
   "Owner of a folder"
   user: User
   "user id used to resolve user"
-  userId: ID
+  userId: Int
   "Children of a folder"
   children(
     "Current page"
@@ -26,6 +27,7 @@ type Folder {
 }
 
 type File {
+  id: Int!
   "UUID that uniquely identifies a file"
   uuid: UUID!
   "File name"
@@ -43,6 +45,7 @@ enum ItemType {
   FILE
 }
 type FolderItem {
+  id: Int!
   "Folder type, either File or Folder"
   type: ItemType!
   "Folder child"

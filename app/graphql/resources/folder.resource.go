@@ -16,6 +16,7 @@ func resolveFolderItemTypeField(fi entities.FolderItem) model.ItemType {
 
 func NewFolderResource(folder entities.Folder) *model.Folder {
 	return &model.Folder{
+		ID:        int(folder.ID),
 		UUID:      scalers.UUID(folder.Uuid.String()),
 		IsRoot:    folder.IsRoot,
 		Name:      folder.Name,
@@ -26,6 +27,7 @@ func NewFolderResource(folder entities.Folder) *model.Folder {
 
 func NewFileResource(file entities.File) *model.File {
 	return &model.File{
+		ID:        int(file.ID),
 		UUID:      scalers.UUID(file.Uuid.String()),
 		Name:      &file.Name,
 		URL:       file.Name,
@@ -42,6 +44,7 @@ func NewFolderResourceCollectionResource(folders []entities.Folder) []*model.Fol
 
 	return folderCollectionResource
 }
+
 func NewFileResourceCollectionResource(files []entities.File) []*model.File {
 	var fileCollectionResource []*model.File
 	for _, file := range files {
@@ -53,6 +56,27 @@ func NewFileResourceCollectionResource(files []entities.File) []*model.File {
 
 func NewFolderItemResource(folderItem entities.FolderItem) *model.FolderItem {
 	return &model.FolderItem{
+		ID:   int(folderItem.ID),
 		Type: resolveFolderItemTypeField(folderItem),
+	}
+}
+
+func NewFolderItemCollectionResource(contents []entities.FolderItem) []*model.FolderItem {
+	var folderContentResource []*model.FolderItem
+	for _, item := range contents {
+		folderContentResource = append(folderContentResource, NewFolderItemResource(item))
+	}
+
+	return folderContentResource
+}
+
+func PaginatedFolderItemResource(list []entities.FolderItem, count int, pageSize int, next int) *model.PaginatedFolderItems {
+	return &model.PaginatedFolderItems{
+		Meta: &model.PaginatedMeta{
+			NextPage: &next,
+			PageSize: pageSize,
+			Count:    count,
+		},
+		List: NewFolderItemCollectionResource(list),
 	}
 }

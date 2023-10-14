@@ -7,12 +7,12 @@ type UnAuthorizedError implements Error {
 }
 
 type PaginatedMeta {
-  "Current page"
-  currentPage: Int
   "Next page"
   nextPage: Int
   "Size of page"
-  pageSize: Int
+  pageSize: Int!
+  "Total Count of items"
+  count: Int!
 }
 
 scalar Upload

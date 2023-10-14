@@ -3,6 +3,9 @@ package utils
 import (
 	"fmt"
 	"strconv"
+
+	"github.com/developertom01/library-server/app/graphql/scalers"
+	"github.com/google/uuid"
 )
 
 func ParseStringToUint(t string) (*uint, error) {
@@ -31,4 +34,8 @@ func ParseMultipleStringToUint(t []string) ([]uint, error) {
 func ParseUintToString(t uint) *string {
 	ts := fmt.Sprint(t)
 	return &ts
+}
+
+func ParseScalerUuidToNativeUuid(id scalers.UUID) (uuid.UUID, error) {
+	return uuid.Parse(string(id))
 }

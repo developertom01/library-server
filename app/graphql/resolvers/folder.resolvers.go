@@ -8,18 +8,35 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/developertom01/library-server/app/graphql/dataloader"
 	"github.com/developertom01/library-server/app/graphql/model"
+	"github.com/developertom01/library-server/app/graphql/resources"
 	"github.com/developertom01/library-server/generated"
+	"github.com/developertom01/library-server/utils"
 )
 
 // User is the resolver for the user field.
 func (r *folderResolver) User(ctx context.Context, obj *model.Folder) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: Children - children"))
+	dl := dataloader.ExtractLoaderFromContext(ctx)
+	user, err := dl.LoadUserById(*obj.UserID)
+	if err != nil {
+		return nil, err
+	}
+	return resources.NewUserResource(*user), nil
 }
 
 // Children is the resolver for the children field.
 func (r *folderResolver) Children(ctx context.Context, obj *model.Folder, page *int, pageSize *int) (*model.PaginatedFolderItems, error) {
-	panic(fmt.Errorf("not implemented: Children - children"))
+	uuid, err := utils.ParseScalerUuidToNativeUuid(obj.UUID)
+	if err != nil {
+		return nil, err
+	}
+	limit, offset := utils.CalculatePaginationLimitAndOffset(*page, *pageSize)
+	children, err := r.Db.FindPaginatedFolderContentReferencingParentId(uuid, uint(limit), uint(offset))
+	if err != nil {
+		return nil, err
+	}
+	return resources.PaginatedFolderItemResource(children, 20, *pageSize, *page+1), nil
 }
 
 // Folder is the resolver for the folder field.

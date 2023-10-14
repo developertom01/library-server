@@ -6,8 +6,8 @@ import (
 	"github.com/developertom01/library-server/utils"
 )
 
-func NewUserResource(user entities.User) model.User {
-	return model.User{
+func NewUserResource(user entities.User) *model.User {
+	return &model.User{
 		FirstName: &user.FirstName,
 		LastName:  &user.LastName,
 		Email:     user.Email,

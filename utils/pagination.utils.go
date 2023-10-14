@@ -1,6 +1,6 @@
 package utils
 
-func CalculateLimitAndOffset(pageNumber, pageSize int) (limit, offset int) {
+func CalculatePaginationLimitAndOffset(pageNumber, pageSize int) (limit, offset int) {
 	if pageNumber <= 0 {
 		pageNumber = 1
 	}
