@@ -5,3 +5,4 @@ temp
 **/model/models_gen.go
 generated
 task_queue.txt
+**/tmp

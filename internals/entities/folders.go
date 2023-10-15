@@ -38,3 +38,17 @@ type FolderItem struct {
 	ChildFolder *Folder `gorm:"references:ChildFolderId"`
 	File        *File   `gorm:"references:fileId"`
 }
+
+func (folder *Folder) BeforeCreate(tx *gorm.DB) (err error) {
+	if folder.Uuid == uuid.Nil {
+		folder.Uuid = uuid.New()
+	}
+	return err
+}
+
+func (file *File) BeforeCreate(tx *gorm.DB) (err error) {
+	if file.Uuid == uuid.Nil {
+		file.Uuid = uuid.New()
+	}
+	return err
+}

@@ -5,6 +5,10 @@ WORKDIR /opt/app
 COPY . .
 
 RUN go mod tidy
-RUN go build ./cmd/main.go
+RUN go build ./main.go
 
-CMD [ "go","run","./cmd/main.go" ]
+FROM alpine:3.18
+WORKDIR /opt/app
+
+COPY --from=build /opt/app/main .
+CMD ["/opt/app/main"]

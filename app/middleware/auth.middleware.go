@@ -2,13 +2,12 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/developertom01/library-server/internals/db"
 	"github.com/developertom01/library-server/utils"
 )
-
-var userCtxKey = &contextKey{"user"}
 
 type contextKey struct {
 	name string
@@ -22,13 +21,18 @@ func AuthenticationMiddleware(db *db.Database) func(http.Handler) http.Handler {
 				next.ServeHTTP(w, r)
 				return
 			}
-			jwtToken := utils.ExtractBearerToken(h[0])
-			c, err := utils.ValidateToken(jwtToken)
+			jwtToken, err := utils.ExtractBearerToken(h[0])
 			if err != nil {
 				next.ServeHTTP(w, r)
 				return
 			}
-			ctx := context.WithValue(r.Context(), userCtxKey, c)
+			c, err := utils.ValidateToken(jwtToken)
+			fmt.Print(c)
+			if err != nil {
+				next.ServeHTTP(w, r)
+				return
+			}
+			ctx := context.WithValue(r.Context(), "user", c)
 			r = r.WithContext(ctx)
 			next.ServeHTTP(w, r)
 		})

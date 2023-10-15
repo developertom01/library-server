@@ -17,5 +17,8 @@ type User struct {
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	u.Password, err = utils.HashPassword(u.Password)
+	if u.Uuid == uuid.Nil {
+		u.Uuid = uuid.New()
+	}
 	return err
 }

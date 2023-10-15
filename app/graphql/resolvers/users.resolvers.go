@@ -24,7 +24,7 @@ func (r *mutationResolver) Login(ctx context.Context, input model.LoginInInput) 
 	if !isPasswordConfirmed {
 		return nil, fmt.Errorf("Invalid password")
 	}
-	jwtToken, err := utils.SignToken(utils.JWTClaim{ID: user.ID, Email: user.Email, FirstName: user.FirstName, LastName: user.LastName})
+	jwtToken, err := utils.SignToken(utils.JWTClaim{ID: user.ID, UUID: user.Uuid.String(), Email: user.Email, FirstName: user.FirstName, LastName: user.LastName})
 	if err != nil {
 		return nil, err
 	}
@@ -45,10 +45,11 @@ func (r *mutationResolver) SignUp(ctx context.Context, input *model.SignUpInput)
 
 // CurrentUser is the resolver for the currentUser field.
 func (r *queryResolver) CurrentUser(ctx context.Context) (model.CurrentUserResponse, error) {
-	jwtClaim := ctx.Value("user").(*utils.JWTClaim)
-	if jwtClaim == nil {
-		return exceptions.NewUnAuthorizeError("dsd"), nil
+	claim := ctx.Value("user")
+	if claim == nil {
+		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
 	}
+	jwtClaim := claim.(*utils.JWTClaim)
 	user, err := r.Db.FindUserByUuid(jwtClaim.UUID)
 	if err != nil {
 		return nil, err
