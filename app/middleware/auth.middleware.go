@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/developertom01/library-server/internals/db"
@@ -23,7 +22,6 @@ func AuthenticationMiddleware(db *db.Database) func(http.Handler) http.Handler {
 				return
 			}
 			c, err := utils.ValidateToken(jwtToken)
-			fmt.Print(c)
 			if err != nil {
 				next.ServeHTTP(w, r)
 				return
