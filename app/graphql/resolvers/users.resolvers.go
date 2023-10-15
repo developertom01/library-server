@@ -45,11 +45,11 @@ func (r *mutationResolver) SignUp(ctx context.Context, input *model.SignUpInput)
 
 // CurrentUser is the resolver for the currentUser field.
 func (r *queryResolver) CurrentUser(ctx context.Context) (model.CurrentUserResponse, error) {
-	jwtClaim := ctx.Value("user").(*utils.JWTClaim)
-	if jwtClaim == nil {
+	claim := ctx.Value("user")
+	if claim == nil {
 		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
 	}
-	user, err := r.Db.FindUserByUuid(jwtClaim.UUID)
+	user, err := r.Db.FindUserByUuid(claim.(*utils.JWTClaim).UUID)
 	if err != nil {
 		return nil, err
 	}
