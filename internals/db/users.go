@@ -45,7 +45,7 @@ func (db *Database) CreateUserWithFileSetup(firstName string, lastName string, e
 			return res.Error
 		}
 		rootFolder := entities.Folder{
-			UserId: int(user.ID),
+			UserId: user.ID,
 			Name:   fmt.Sprintf("root_folder_%s", user.Uuid.String()),
 			IsRoot: true,
 			Path:   []uuid.UUID{},

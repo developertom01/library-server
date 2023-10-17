@@ -2,6 +2,9 @@ all:
 	@echo "starting all"
 	docker-compose up --build -d
 
+start:
+	air
+
 prod:
 	docker-compose -f docker-compose-prod.yaml up --build -d
 

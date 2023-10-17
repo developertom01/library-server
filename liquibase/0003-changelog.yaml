@@ -39,8 +39,8 @@ databaseChangeLog:
                   name: path
                   type: UUID[]
                   constraints:
-                    nullable: false
-                    defaultValueArray: []
+                    nullable: true
+                    defaultValueComputed: "ARRAY[]::UUID[]"
               - column:
                   name: created_at
                   type: TIMESTAMP
@@ -94,8 +94,8 @@ databaseChangeLog:
                   name: path
                   type: UUID[]
                   constraints:
-                    nullable: false
-                    defaultValueArray: []
+                    nullable: true
+                    defaultValueComputed: "ARRAY[]::UUID[]"
               - column:
                   name: created_at
                   type: TIMESTAMP

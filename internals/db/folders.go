@@ -21,7 +21,7 @@ func mapFolderItemsToChildFolders(items []entities.FolderItem) []entities.Folder
 	return children
 }
 
-func (db *Database) FindUsersTopLevelFolderItems(userId int, limit int, offset int, orderByField *string, orderBy *model.Order) ([]entities.FolderItem, int, error) {
+func (db *Database) FindUsersTopLevelFolderItems(userId uint, limit int, offset int, orderByField *string, orderBy *model.Order) ([]entities.FolderItem, int, error) {
 	var totalCount int64
 	var err error
 	var errMutex sync.Mutex
@@ -112,7 +112,7 @@ func (db *Database) FindPaginatedFolderContentReferencingParentId(parentUuid uui
 	return rootFolder.Children, int(totalCount), err
 }
 
-func (db *Database) GetUserRootFolder(userId int) (entities.Folder, error) {
+func (db *Database) GetUserRootFolder(userId uint) (entities.Folder, error) {
 	folder := entities.Folder{
 		UserId: userId,
 		IsRoot: true,
@@ -122,7 +122,7 @@ func (db *Database) GetUserRootFolder(userId int) (entities.Folder, error) {
 	return folder, res.Error
 }
 
-func (db *Database) CreateFolder(folderName string, ownerId int, parentUuid scalers.UUID) (entities.Folder, error) {
+func (db *Database) CreateFolder(folderName string, ownerId uint, parentUuid scalers.UUID) (entities.Folder, error) {
 	var parentItem entities.FolderItem
 	uuidParsed, err := utils.ParseScalerUuidToNativeUuid(parentUuid)
 	if err != nil {
@@ -145,8 +145,8 @@ func (db *Database) CreateFolder(folderName string, ownerId int, parentUuid scal
 			return res.Error
 		}
 		parentItem = entities.FolderItem{
-			ParentId:      int(parentFolder.ID),
-			ChildFolderId: int(folder.ID),
+			ParentId:      parentFolder.ID,
+			ChildFolderId: folder.ID,
 		}
 		res := tx.Create(&parentItem)
 		return res.Error
@@ -188,7 +188,7 @@ func (db *Database) FindFileReferencingFolderItemId(fileId uint) (entities.File,
 	return *item.File, res.Error
 }
 
-func (db *Database) CreateFile(fileName string, url string, ownerId int, parentUuid scalers.UUID) (entities.File, error) {
+func (db *Database) CreateFile(fileName string, url string, ownerId uint, parentUuid scalers.UUID) (entities.File, error) {
 	var parentItem entities.FolderItem
 	uuidParsed, err := utils.ParseScalerUuidToNativeUuid(parentUuid)
 	if err != nil {
@@ -206,14 +206,14 @@ func (db *Database) CreateFile(fileName string, url string, ownerId int, parentU
 		Url:    url,
 		Path:   path,
 	}
-	
+
 	err = db.DB.Transaction(func(tx *gorm.DB) error {
 		if res := tx.Create(&file); res.Error != nil {
 			return res.Error
 		}
 		parentItem = entities.FolderItem{
-			ParentId: int(parentFolder.ID),
-			FileId:   int(file.ID),
+			ParentId: parentFolder.ID,
+			FileId:   file.ID,
 		}
 		res := tx.Create(&parentItem)
 		return res.Error

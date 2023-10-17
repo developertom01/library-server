@@ -15,6 +15,10 @@ type User struct {
 	Password  string    `gorm:"not null;"`
 }
 
+func (User) TableName() string {
+	return "users"
+}
+
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	u.Password, err = utils.HashPassword(u.Password)
 	if u.Uuid == uuid.Nil {

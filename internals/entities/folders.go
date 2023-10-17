@@ -10,11 +10,15 @@ type Folder struct {
 	Uuid   uuid.UUID   `gorm:"type:uuid;default:gen_random_uuid();unique;"`
 	Name   string      `gorm:"not null;column:name"`
 	IsRoot bool        `gorm:"column:is_root;default:false"`
-	UserId int         `gorm:"column:user_id"`
-	Path   []uuid.UUID `gorm:"column:path;default:[]"`
+	UserId uint        `gorm:"column:user_id"`
+	Path   []uuid.UUID `gorm:"column:path;type:uuid[]"`
 
-	User     User         `gorm:"references:UserId"`
+	User     User         `gorm:"foreignKey:UserId"`
 	Children []FolderItem `gorm:"foreignKey:ParentId"`
+}
+
+func (Folder) TableName() string {
+	return "folders"
 }
 
 type File struct {
@@ -22,21 +26,28 @@ type File struct {
 	Uuid   uuid.UUID   `gorm:"type:uuid;default:gen_random_uuid();unique;"`
 	Name   string      `gorm:"not null;column:name"`
 	Url    string      `gorm:"not null;column:name"`
-	UserId int         `gorm:"column:user_id"`
-	Path   []uuid.UUID `gorm:"column:path;default:[]"`
+	UserId uint        `gorm:"column:user_id"`
+	Path   []uuid.UUID `gorm:"column:path;type:uuid[]"`
+	User   User        `gorm:"foreignKey:UserId"`
+}
 
-	User User `gorm:"references:UserId"`
+func (File) TableName() string {
+	return "files"
 }
 
 type FolderItem struct {
 	gorm.Model
-	ParentId      int `gorm:"column:parent_id;"`
-	FileId        int `gorm:"column:file_id;"`
-	ChildFolderId int `gorm:"column:child_folder_id;"`
+	ParentId      uint `gorm:"column:parent_id;"`
+	FileId        uint `gorm:"column:file_id;"`
+	ChildFolderId uint `gorm:"column:child_folder_id;"`
 
-	Parent      *Folder `gorm:"references:ParentId"`
-	ChildFolder *Folder `gorm:"references:ChildFolderId"`
-	File        *File   `gorm:"references:fileId"`
+	Parent      *Folder `gorm:"foreignKey:ParentId"`
+	ChildFolder *Folder `gorm:"foreignKey:ChildFolderId"`
+	File        *File   `gorm:"foreignKey:FileId"`
+}
+
+func (FolderItem) TableName() string {
+	return "folder_items"
 }
 
 func (folder *Folder) BeforeCreate(tx *gorm.DB) (err error) {

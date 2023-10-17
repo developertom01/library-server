@@ -79,7 +79,7 @@ func (r *mutationResolver) CreateFolder(ctx context.Context, input *model.Create
 		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
 	}
 
-	folder, err := r.Db.CreateFolder(input.Name, int(user.ID), *input.ParentUUID)
+	folder, err := r.Db.CreateFolder(input.Name, user.ID, *input.ParentUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input *model.CreateFi
 		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
 	}
 
-	file, err := r.Db.CreateFile(input.Name, string(input.URL), int(user.ID), *input.ParentUUID)
+	file, err := r.Db.CreateFile(input.Name, string(input.URL), user.ID, *input.ParentUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func (r *queryResolver) UserTopLevelFolders(ctx context.Context, page *int, page
 		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
 	}
 	limit, offset := utils.CalculatePaginationLimitAndOffset(*page, *pageSize)
-	contents, count, err := r.Db.FindUsersTopLevelFolderItems(int(user.ID), limit, offset, orderByField, orderBy)
+	contents, count, err := r.Db.FindUsersTopLevelFolderItems(user.ID, limit, offset, orderByField, orderBy)
 	if err != nil {
 		return nil, err
 	}
