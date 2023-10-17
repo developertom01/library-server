@@ -44,6 +44,7 @@ func (db *Database) CreateUserWithFileSetup(firstName string, lastName string, e
 		if res := tx.Create(&user); res.Error != nil {
 			return res.Error
 		}
+
 		rootFolder := entities.Folder{
 			UserId: user.ID,
 			Name:   fmt.Sprintf("root_folder_%s", user.Uuid.String()),
@@ -53,6 +54,7 @@ func (db *Database) CreateUserWithFileSetup(firstName string, lastName string, e
 		if res := tx.Create(&rootFolder); res.Error != nil {
 			return res.Error
 		}
+
 		return nil
 
 	})
