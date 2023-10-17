@@ -37,7 +37,7 @@ func NewFileResource(file entities.File) *model.File {
 }
 
 func NewFolderResourceCollectionResource(folders []entities.Folder) []*model.Folder {
-	var folderCollectionResource []*model.Folder
+	folderCollectionResource := []*model.Folder{}
 	for _, folder := range folders {
 		folderCollectionResource = append(folderCollectionResource, NewFolderResource(folder))
 	}
@@ -46,7 +46,7 @@ func NewFolderResourceCollectionResource(folders []entities.Folder) []*model.Fol
 }
 
 func NewFileResourceCollectionResource(files []entities.File) []*model.File {
-	var fileCollectionResource []*model.File
+	fileCollectionResource := []*model.File{}
 	for _, file := range files {
 		fileCollectionResource = append(fileCollectionResource, NewFileResource(file))
 	}
@@ -62,7 +62,7 @@ func NewFolderItemResource(folderItem entities.FolderItem) *model.FolderItem {
 }
 
 func NewFolderItemCollectionResource(contents []entities.FolderItem) []*model.FolderItem {
-	var folderContentResource []*model.FolderItem
+	folderContentResource := []*model.FolderItem{}
 	for _, item := range contents {
 		folderContentResource = append(folderContentResource, NewFolderItemResource(item))
 	}

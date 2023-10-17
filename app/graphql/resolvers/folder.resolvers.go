@@ -104,10 +104,11 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input *model.CreateFi
 
 // UserTopLevelFolders is the resolver for the userTopLevelFolders field.
 func (r *queryResolver) UserTopLevelFolders(ctx context.Context, page *int, pageSize *int, orderByField *string, orderBy *model.Order) (model.UserTopLevelFolders, error) {
-	user := ctx.Value("user").(*utils.JWTClaim)
-	if user == nil {
+	claim := ctx.Value("user")
+	if claim == nil {
 		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
 	}
+	user := claim.(*utils.JWTClaim)
 	limit, offset := utils.CalculatePaginationLimitAndOffset(*page, *pageSize)
 	contents, count, err := r.Db.FindUsersTopLevelFolderItems(user.ID, limit, offset, orderByField, orderBy)
 	if err != nil {
