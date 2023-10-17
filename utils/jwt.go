@@ -1,11 +1,14 @@
 package utils
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"time"
 
+	"github.com/developertom01/library-server/app/graphql/exceptions"
+	"github.com/developertom01/library-server/app/graphql/model"
 	"github.com/developertom01/library-server/config"
 	"github.com/dgryski/trifles/uuid"
 	"github.com/golang-jwt/jwt/v5"
@@ -91,4 +94,13 @@ func extractJWTClaim(subClaim string) (*JWTClaim, error) {
 	}
 
 	return &claim, nil
+}
+
+func GetAuthUserOrReturnAuthError(ctx context.Context) (*JWTClaim, *model.UnAuthorizedError) {
+	claim := ctx.Value("user")
+	if claim == nil {
+		err := exceptions.NewUnAuthorizeError("UnAuthorized")
+		return nil, &err
+	}
+	return claim.(*JWTClaim), nil
 }

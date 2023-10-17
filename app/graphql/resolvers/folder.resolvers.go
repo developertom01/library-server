@@ -8,7 +8,6 @@ import (
 	"context"
 
 	"github.com/developertom01/library-server/app/graphql/dataloader"
-	"github.com/developertom01/library-server/app/graphql/exceptions"
 	"github.com/developertom01/library-server/app/graphql/model"
 	"github.com/developertom01/library-server/app/graphql/resources"
 	"github.com/developertom01/library-server/generated"
@@ -74,9 +73,9 @@ func (r *folderItemResolver) Parent(ctx context.Context, obj *model.FolderItem) 
 
 // CreateFolder is the resolver for the createFolder field.
 func (r *mutationResolver) CreateFolder(ctx context.Context, input *model.CreateFolderInput) (model.CreateFolderResponse, error) {
-	user := ctx.Value("user").(*utils.JWTClaim)
-	if user == nil {
-		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
+	user, unAuthorizedError := utils.GetAuthUserOrReturnAuthError(ctx)
+	if unAuthorizedError != nil {
+		return unAuthorizedError, nil
 	}
 
 	folder, err := r.Db.CreateFolder(input.Name, user.ID, *input.ParentUUID)
@@ -89,9 +88,9 @@ func (r *mutationResolver) CreateFolder(ctx context.Context, input *model.Create
 
 // CreateFile is the resolver for the createFile field.
 func (r *mutationResolver) CreateFile(ctx context.Context, input *model.CreateFileInput) (model.CreateFileResponse, error) {
-	user := ctx.Value("user").(*utils.JWTClaim)
-	if user == nil {
-		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
+	user, unAuthorizedError := utils.GetAuthUserOrReturnAuthError(ctx)
+	if unAuthorizedError != nil {
+		return unAuthorizedError, nil
 	}
 
 	file, err := r.Db.CreateFile(input.Name, string(input.URL), user.ID, *input.ParentUUID)
@@ -104,11 +103,10 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input *model.CreateFi
 
 // UserTopLevelFolders is the resolver for the userTopLevelFolders field.
 func (r *queryResolver) UserTopLevelFolders(ctx context.Context, page *int, pageSize *int, orderByField *string, orderBy *model.Order) (model.UserTopLevelFolders, error) {
-	claim := ctx.Value("user")
-	if claim == nil {
-		return exceptions.NewUnAuthorizeError("UnAuthorized"), nil
+	user, unAuthorizedError := utils.GetAuthUserOrReturnAuthError(ctx)
+	if unAuthorizedError != nil {
+		return unAuthorizedError, nil
 	}
-	user := claim.(*utils.JWTClaim)
 	limit, offset := utils.CalculatePaginationLimitAndOffset(*page, *pageSize)
 	contents, count, err := r.Db.FindUsersTopLevelFolderItems(user.ID, limit, offset, orderByField, orderBy)
 	if err != nil {
