@@ -36,7 +36,7 @@ func (r *mutationResolver) Login(ctx context.Context, input model.LoginInInput) 
 
 // SignUp is the resolver for the signUp field.
 func (r *mutationResolver) SignUp(ctx context.Context, input *model.SignUpInput) (model.SignUpUserResponse, error) {
-	user, err := r.Db.CreateUser(*input.FirstName, *input.LastName, input.Email, input.Password)
+	user, err := r.Db.CreateUserWithFileSetup(*input.FirstName, *input.LastName, input.Email, input.Password)
 	if err != nil && utils.IsUniqueConstraintViolated(err) {
 		return exceptions.NewEmailAlreadyExistsError("User with same email exists"), nil
 	}
